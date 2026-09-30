@@ -46,7 +46,7 @@ PYTHONHASHSEED=0 python run_experiments.py --epochs 10 --output outputs/selected
 
 `outputs/<run>/metrics.json` 含各类样本数、划分、词表、近邻词、OOV 向量可用性，以及每个表示在三类和五类任务上的验证与测试 accuracy、macro-F1 和逐类指标。`word2vec.model`、`fasttext.model` 可重新载入；输出不会提交到 Git。默认分类器为相同超参数的逻辑回归，以便比较表示。TF-IDF 是词频基线；Gensim LSI 将 TF-IDF 映射到低维主题空间；Word2Vec/FastText 对正文词向量取平均。这里的简单平均没有监督地调整词向量。
 
-`run_ablations.py` 使用相同文章划分逐项改变子词开关、子词长度、哈希桶、维度、窗口、训练轮次、最低词频或 skip-gram/CBOW。输出 `outputs/ablations.json` 记录验证集 macro-F1、训练时间、词表、估计内存、桶占用与 OOV 可用性；不逐项查看测试集来挑选参数。`results/` 保存本次运行的轻量 JSON 指标快照，完整模型仍留在本地 `outputs/`。源码路径、论文差异和参数选择见 [implementation guide](docs/implementation-guide.md)。
+`run_ablations.py` 使用相同文章划分逐项改变子词开关、子词长度、哈希桶、维度、窗口、训练轮次、最低词频或 skip-gram/CBOW。输出 `outputs/ablations.json` 记录验证集 macro-F1、训练时间、词表、估计内存、桶占用与 OOV 可用性；不逐项查看测试集来挑选参数。`results/` 保存本次运行的轻量 JSON 指标快照，完整模型仍留在本地 `outputs/`。源码路径、论文差异和参数选择见[实现导览](docs/implementation-guide.md)。
 
 ## FastText 与论文及源码
 

@@ -1,44 +1,44 @@
-# Gensim FastText implementation guide
+# Gensim FastText 实现导览
 
-This is a developer reading guide for the installed Gensim 4.3.3 implementation. It documents which components this repository calls and where to inspect their behavior. Run `python -m src.source_map` to print line numbers for the actual installed package; the Cython source is available as `gensim/models/fasttext_inner.pyx` in the Conda environment or [upstream repository](https://github.com/piskvorky/gensim/blob/4.3.3/gensim/models/fasttext_inner.pyx).
+本文是针对项目所用 Gensim 4.3.3 的开发者阅读指南，说明本项目调用了哪些组件，以及应从哪里查看它们的实现。运行 `python -m src.source_map` 可打印当前安装版本的源码行号。Cython 源码 `gensim/models/fasttext_inner.pyx` 可在 Conda 环境或 [Gensim 上游仓库](https://github.com/piskvorky/gensim/blob/4.3.3/gensim/models/fasttext_inner.pyx)中查看。
 
-## Two related FastText tasks
+## 两项相关的 FastText 任务
 
-| Reference | Objective | Mapping here |
+| 参考资料 | 目标 | 本项目的对应部分 |
 | --- | --- | --- |
-| [Enriching Word Vectors with Subword Information](https://arxiv.org/abs/1607.04606) | Learn word representations from context, using character n-grams | `gensim.models.FastText` with `sg=1`; its vectors feed the classifier |
-| [Bag of Tricks for Efficient Text Classification](https://aclanthology.org/E17-2068/) | Learn a supervised text classifier, including word n-gram features and a label prediction layer | Only the idea of an aggregated document vector is used; scikit-learn trains the separate label classifier |
+| [Enriching Word Vectors with Subword Information](https://arxiv.org/abs/1607.04606) | 利用字符 n-gram 和上下文学习词表示 | 使用 `sg=1` 的 `gensim.models.FastText` 训练词向量，再将向量用于分类 |
+| [Bag of Tricks for Efficient Text Classification](https://aclanthology.org/E17-2068/) | 训练监督式文本分类器，包含词 n-gram 特征和标签预测层 | 只采用聚合文档向量的思路；标签分类器由 scikit-learn 单独训练 |
 
-Gensim 4.3.3 rejects `word_ngrams != 1` in `FastText.__init__`. Its `min_n` and `max_n` refer to **character** n-grams within a word, not the **word** n-grams in the classification paper. Setting `hs=1` in Gensim changes the *word embedding training objective*; it does not add the classification paper's hierarchical label softmax. These are distinct mechanisms even though they share terminology.
+在 Gensim 4.3.3 中，`FastText.__init__` 不支持 `word_ngrams != 1`。`min_n` 和 `max_n` 指的是**词内部的字符** n-gram 长度，而分类论文中的词 n-gram 指的是**相邻词组成的序列**。将 Gensim 的 `hs` 设为 `1`，改变的是*词向量训练目标*，不会加入分类论文中的标签层次 softmax。两者名称相近，但作用于不同任务。
 
-## Source trace
+## 源码调用路径
 
-1. `FastText.__init__` (`fasttext.py`) validates `word_ngrams`, sets up `FastTextKeyedVectors`, and delegates shared options to `Word2Vec.__init__`.
-2. `Word2Vec.build_vocab` scans word counts and applies `min_count`. FastText's `FastTextKeyedVectors.recalc_char_ngram_buckets` creates per-word hashed subword indices. `FastText.estimate_memory` accounts for the vocabulary and `bucket × vector_size` subword storage.
-3. `Word2Vec.train` schedules batches, epochs and learning-rate decay. `FastText._do_train_job` calls the compiled `train_batch_any` in `fasttext_inner.pyx`. With `sg=1, hs=0, negative=5`, the skip-gram negative-sampling path updates word, subword and output vectors.
-4. `ft_ngram_hashes` (`fasttext.py`) calls `compute_ngrams_bytes` and `ft_hash_bytes` (`fasttext_inner.pyx`), then takes the hash modulo `bucket`. The Cython function adds `<` and `>` boundaries and walks UTF-8 character starts. This matters for Chinese: an n-gram length counts characters rather than raw UTF-8 bytes.
-5. `FastTextKeyedVectors.adjust_vectors` composes stored in-vocabulary word and subword vectors after training. `__contains__` checks whether a vector can be returned. `get_vector` returns a stored composite vector for an in-vocabulary word and builds an OOV vector from hashed subwords otherwise.
-6. `_save_specials` and `_load_specials` handle derived vector caches, hash compatibility and cache reconstruction on model serialization. The project saves a full `.model` so training may be resumed or vectors inspected later.
+1. `FastText.__init__`（`fasttext.py`）检查 `word_ngrams`，创建 `FastTextKeyedVectors`，并将通用参数传给 `Word2Vec.__init__`。
+2. `Word2Vec.build_vocab` 扫描词频，并按 `min_count` 过滤。FastText 的 `FastTextKeyedVectors.recalc_char_ngram_buckets` 为词表中的每个词建立经过哈希的子词索引。`FastText.estimate_memory` 估算词表及 `bucket × vector_size` 子词向量所需的内存。
+3. `Word2Vec.train` 安排训练批次、轮次和学习率衰减。`FastText._do_train_job` 调用 `fasttext_inner.pyx` 中编译后的 `train_batch_any`。当 `sg=1, hs=0, negative=5` 时，skip-gram 负采样路径会更新词向量、子词向量和输出向量。
+4. `ft_ngram_hashes`（`fasttext.py`）调用 `compute_ngrams_bytes` 和 `ft_hash_bytes`（`fasttext_inner.pyx`），再对哈希值取模 `bucket`。Cython 函数为词加入 `<`、`>` 边界符，并沿 UTF-8 字符的起始位置遍历。对中文尤其要注意：n-gram 的长度按字符计算，而不是按原始 UTF-8 字节计算。
+5. `FastTextKeyedVectors.adjust_vectors` 在训练后合成词表内词的词向量与子词向量。`__contains__` 检查是否可以返回向量。`get_vector` 对词表内词返回已合成的向量，对未登录词（OOV）则用哈希子词构造向量。
+6. `_save_specials` 和 `_load_specials` 在模型保存、加载时处理派生向量缓存、哈希兼容性及缓存重建。项目保存完整的 `.model`，以便之后继续训练或检查向量。
 
-The [subword paper](https://arxiv.org/abs/1607.04606) describes a word through its character n-gram representations and a context-prediction objective. Gensim's optimized Cython routines include implementation-specific scaling and caches, so the formulas in the paper should be compared with the actual training and inference paths rather than read as line-for-line pseudocode. `FastTextKeyedVectors.get_vector` can return an OOV vector when hashes exist; that alone does **not** prove its semantic quality. A very small bucket can also collide many unrelated n-grams.
+[子词向量论文](https://arxiv.org/abs/1607.04606)用字符 n-gram 表示词，并通过上下文预测学习表示。Gensim 优化后的 Cython 代码还包含具体的缩放和缓存处理；对照论文时，应沿训练和推断路径检查，不能把论文公式当作逐行伪代码。`FastTextKeyedVectors.get_vector` 能在存在子词哈希时返回 OOV 向量，但这**不能证明向量具有良好的语义质量**。桶太小还可能使无关子词发生大量哈希冲突。
 
-## Parameter map
+## 参数与实现的对应关系
 
-| Parameter | Source role | Practical choice or check |
+| 参数 | 在源码中的作用 | 本项目的设置与检查方式 |
 | --- | --- | --- |
-| `vector_size` | Width of word, subword and output vectors | 64 is the project baseline; 128 tests capacity against memory and runtime |
-| `window` | Maximum context distance in training | 5 is baseline; 2 tests more local contexts |
-| `epochs` | Corpus passes and training schedule | 5 is baseline; 10 tests more optimization without changing data |
-| `min_count` | Excludes rare whole words from vocabulary | 2 is baseline; 5 tests smaller vocabulary and changed OOV rate |
-| `min_n`, `max_n` | Character subword lengths | 2–4 is baseline; 3–6 changes subword granularity; `min_n=1, max_n=0` disables subwords |
-| `bucket` | Modulus for hashed subword IDs | 100000 is baseline; 10000 tests collision and memory tradeoffs |
-| `sg` | `1` = skip-gram, `0` = CBOW for embedding training | Skip-gram is baseline; CBOW is a controlled architecture variant |
-| `negative`, `hs` | Word embedding training objective | Baseline uses five negative samples and `hs=0`; neither is the supervised label loss |
-| `sample`, `shrink_windows` | Frequent-word downsampling and random reduction of effective window | Kept at Gensim defaults across ablations to isolate the chosen factor |
-| `workers`, `seed` | Thread scheduling and initialization | One worker and fixed seed reduce variation; use `PYTHONHASHSEED=0` for repeated runs |
+| `vector_size` | 词向量、子词向量及输出向量的维度 | 基线为 64；用 128 检查表示容量、内存和耗时的变化 |
+| `window` | 训练时的最大上下文距离 | 基线为 5；用 2 检查更局部的上下文 |
+| `epochs` | 遍历语料的轮数及训练调度 | 基线为 5；用 10 检查增加优化轮数的影响，数据保持不变 |
+| `min_count` | 从词表中排除低频完整词 | 基线为 2；用 5 检查词表缩小及 OOV 比例变化 |
+| `min_n`、`max_n` | 字符子词的长度范围 | 基线为 2–4；用 3–6 改变子词粒度；`min_n=1, max_n=0` 关闭子词 |
+| `bucket` | 子词哈希 ID 的取模范围 | 基线为 100000；用 10000 检查哈希冲突与内存的取舍 |
+| `sg` | 词向量训练算法：`1` 为 skip-gram，`0` 为 CBOW | 基线为 skip-gram；将 CBOW 作为受控的架构对照 |
+| `negative`、`hs` | 词向量训练目标 | 基线使用 5 个负样本和 `hs=0`；两者均不是监督分类的标签损失 |
+| `sample`、`shrink_windows` | 高频词下采样与有效窗口的随机缩减 | 消融时保持 Gensim 默认值，以便隔离被比较的因素 |
+| `workers`、`seed` | 线程调度与初始化 | 使用单 worker 和固定种子以减少波动；重复运行时设置 `PYTHONHASHSEED=0` |
 
-## Evaluation boundary
+## 评估边界
 
-`run_experiments.py` trains TF-IDF and LSI only on labeled training articles. Word2Vec and FastText train without labels on those training articles plus articles not selected for classification; labeled validation and test articles are excluded. The title supplies weak labels but is not a classifier feature. `run_ablations.py` reads the same saved article split, changes one parameter group at a time, and reports **validation** metrics; it does not use test results to choose settings. This is an exploratory comparison on one random split and weak labels, not a statistical claim that one setting is universally better.
+`run_experiments.py` 只用带弱标签的训练文章拟合 TF-IDF 和 LSI。Word2Vec、FastText 的无监督训练使用这些训练文章及未被选入分类任务的文章；带弱标签的验证、测试文章被排除。标题用于生成弱标签，但不作为分类器输入。`run_ablations.py` 读取同一份文章划分，每次只改变一组参数，并仅报告**验证集**指标，不用测试集结果挑选设置。这是基于一份随机划分和弱标签的探索性比较，不能据此断言某个设置在其他数据上普遍更好。
 
-The chosen Gensim version's LSI code needs SciPy below 1.14 because it accesses `scipy.sparse.sparsetools.csc_matvecs`. This compatibility constraint is pinned in `environment.yml` and `requirements.txt`.
+当前 Gensim 版本的 LSI 代码调用 `scipy.sparse.sparsetools.csc_matvecs`，因此需要低于 1.14 的 SciPy。`environment.yml` 和 `requirements.txt` 已固定这一兼容范围。
