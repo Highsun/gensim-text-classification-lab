@@ -1,0 +1,538 @@
+{
+  "parameters": {
+    "data": "data/199801.txt",
+    "output": "outputs/default",
+    "vector_size": 64,
+    "epochs": 5,
+    "window": 5,
+    "min_count": 2,
+    "bucket": 100000,
+    "min_n": 2,
+    "max_n": 4,
+    "seed": 42,
+    "workers": 1
+  },
+  "labels": {
+    "economy": [
+      "经济",
+      "企业",
+      "市场",
+      "金融",
+      "银行",
+      "投资",
+      "贸易",
+      "股市",
+      "工业"
+    ],
+    "sports": [
+      "比赛",
+      "足球",
+      "篮球",
+      "奥运",
+      "运动员",
+      "世界杯",
+      "体育",
+      "乒乓",
+      "排球",
+      "网球"
+    ],
+    "culture": [
+      "文化",
+      "文学",
+      "艺术",
+      "音乐",
+      "电影",
+      "电视",
+      "戏剧",
+      "出版",
+      "书法"
+    ],
+    "science": [
+      "科技",
+      "科学",
+      "科研",
+      "电脑",
+      "计算机",
+      "航天",
+      "卫星",
+      "互联网"
+    ],
+    "international": [
+      "美国",
+      "俄罗斯",
+      "联合国",
+      "日本",
+      "韩国",
+      "印度",
+      "巴基斯坦",
+      "法国",
+      "英国"
+    ]
+  },
+  "dataset": {
+    "articles_total": 3148,
+    "labeled": 485,
+    "excluded": {
+      "unlabeled": 2139,
+      "short_body": 496,
+      "ambiguous": 28
+    },
+    "class_counts": {
+      "culture": 86,
+      "economy": 195,
+      "international": 96,
+      "science": 54,
+      "sports": 54
+    },
+    "split_counts": {
+      "train": {
+        "economy": 117,
+        "sports": 32,
+        "culture": 52,
+        "international": 58,
+        "science": 32
+      },
+      "validation": {
+        "economy": 39,
+        "sports": 11,
+        "international": 19,
+        "science": 11,
+        "culture": 17
+      },
+      "test": {
+        "culture": 17,
+        "international": 19,
+        "economy": 39,
+        "science": 11,
+        "sports": 11
+      }
+    },
+    "unsupervised_train_articles": 2522,
+    "vocabulary": 5217,
+    "example_bow_nonzero": 216,
+    "example_tfidf_nonzero": 216,
+    "fasttext_vocab": 27164,
+    "word2vec_vocab": 27164,
+    "probe": "经济",
+    "fasttext_neighbors": [
+      [
+        "经济系",
+        0.8943253755569458
+      ],
+      [
+        "亚太经济",
+        0.8895429372787476
+      ],
+      [
+        "商品经济",
+        0.8722443580627441
+      ],
+      [
+        "经济所",
+        0.8678293824195862
+      ],
+      [
+        "经济林",
+        0.8646542429924011
+      ]
+    ],
+    "word2vec_neighbors": [
+      [
+        "国民经济",
+        0.7688263654708862
+      ],
+      [
+        "金融业",
+        0.728224515914917
+      ],
+      [
+        "旅游业",
+        0.723760187625885
+      ],
+      [
+        "稳定",
+        0.7177476286888123
+      ],
+      [
+        "亚太地区",
+        0.7143056392669678
+      ]
+    ],
+    "fasttext_oov_vector_available": true,
+    "word2vec_oov_vector_available": false
+  },
+  "results": {
+    "3_classes": [
+      {
+        "method": "tfidf",
+        "validation_accuracy": 0.8059701492537313,
+        "validation_macro_f1": 0.7426273880338652,
+        "test_accuracy": 0.835820895522388,
+        "test_macro_f1": 0.7893337110124948,
+        "test_report": {
+          "culture": {
+            "precision": 1.0,
+            "recall": 0.6470588235294118,
+            "f1-score": 0.7857142857142857,
+            "support": 17.0
+          },
+          "economy": {
+            "precision": 0.78,
+            "recall": 1.0,
+            "f1-score": 0.8764044943820225,
+            "support": 39.0
+          },
+          "sports": {
+            "precision": 1.0,
+            "recall": 0.5454545454545454,
+            "f1-score": 0.7058823529411765,
+            "support": 11.0
+          },
+          "accuracy": 0.835820895522388,
+          "macro avg": {
+            "precision": 0.9266666666666667,
+            "recall": 0.7308377896613191,
+            "f1-score": 0.7893337110124948,
+            "support": 67.0
+          },
+          "weighted avg": {
+            "precision": 0.8719402985074627,
+            "recall": 0.835820895522388,
+            "f1-score": 0.8253973734387267,
+            "support": 67.0
+          }
+        }
+      },
+      {
+        "method": "word2vec_mean",
+        "validation_accuracy": 0.8208955223880597,
+        "validation_macro_f1": 0.7271330153683095,
+        "test_accuracy": 0.8656716417910447,
+        "test_macro_f1": 0.7927000529941707,
+        "test_report": {
+          "culture": {
+            "precision": 0.8,
+            "recall": 0.9411764705882353,
+            "f1-score": 0.8648648648648649,
+            "support": 17.0
+          },
+          "economy": {
+            "precision": 0.9024390243902439,
+            "recall": 0.9487179487179487,
+            "f1-score": 0.925,
+            "support": 39.0
+          },
+          "sports": {
+            "precision": 0.8333333333333334,
+            "recall": 0.45454545454545453,
+            "f1-score": 0.5882352941176471,
+            "support": 11.0
+          },
+          "accuracy": 0.8656716417910447,
+          "macro avg": {
+            "precision": 0.8452574525745259,
+            "recall": 0.7814799579505461,
+            "f1-score": 0.7927000529941707,
+            "support": 67.0
+          },
+          "weighted avg": {
+            "precision": 0.8651013226550177,
+            "recall": 0.8656716417910447,
+            "f1-score": 0.8544521035521914,
+            "support": 67.0
+          }
+        }
+      },
+      {
+        "method": "fasttext_mean",
+        "validation_accuracy": 0.8208955223880597,
+        "validation_macro_f1": 0.7271330153683095,
+        "test_accuracy": 0.8805970149253731,
+        "test_macro_f1": 0.8097834255653481,
+        "test_report": {
+          "culture": {
+            "precision": 0.8888888888888888,
+            "recall": 0.9411764705882353,
+            "f1-score": 0.9142857142857143,
+            "support": 17.0
+          },
+          "economy": {
+            "precision": 0.8837209302325582,
+            "recall": 0.9743589743589743,
+            "f1-score": 0.926829268292683,
+            "support": 39.0
+          },
+          "sports": {
+            "precision": 0.8333333333333334,
+            "recall": 0.45454545454545453,
+            "f1-score": 0.5882352941176471,
+            "support": 11.0
+          },
+          "accuracy": 0.8805970149253731,
+          "macro avg": {
+            "precision": 0.8686477174849268,
+            "recall": 0.7900269664975547,
+            "f1-score": 0.8097834255653481,
+            "support": 67.0
+          },
+          "weighted avg": {
+            "precision": 0.8767596127887693,
+            "recall": 0.8805970149253731,
+            "f1-score": 0.8680565200233716,
+            "support": 67.0
+          }
+        }
+      },
+      {
+        "method": "gensim_lsi",
+        "validation_accuracy": 0.8507462686567164,
+        "validation_macro_f1": 0.8160497474640893,
+        "test_accuracy": 0.8656716417910447,
+        "test_macro_f1": 0.8339719029374201,
+        "test_report": {
+          "culture": {
+            "precision": 1.0,
+            "recall": 0.7058823529411765,
+            "f1-score": 0.8275862068965517,
+            "support": 17.0
+          },
+          "economy": {
+            "precision": 0.8125,
+            "recall": 1.0,
+            "f1-score": 0.896551724137931,
+            "support": 39.0
+          },
+          "sports": {
+            "precision": 1.0,
+            "recall": 0.6363636363636364,
+            "f1-score": 0.7777777777777778,
+            "support": 11.0
+          },
+          "accuracy": 0.8656716417910447,
+          "macro avg": {
+            "precision": 0.9375,
+            "recall": 0.7807486631016043,
+            "f1-score": 0.8339719029374201,
+            "support": 67.0
+          },
+          "weighted avg": {
+            "precision": 0.8908582089552238,
+            "recall": 0.8656716417910447,
+            "f1-score": 0.859552810659347,
+            "support": 67.0
+          }
+        }
+      }
+    ],
+    "5_classes": [
+      {
+        "method": "tfidf",
+        "validation_accuracy": 0.6804123711340206,
+        "validation_macro_f1": 0.5934188034188035,
+        "test_accuracy": 0.7216494845360825,
+        "test_macro_f1": 0.6353333333333333,
+        "test_report": {
+          "culture": {
+            "precision": 0.9230769230769231,
+            "recall": 0.7058823529411765,
+            "f1-score": 0.8,
+            "support": 17.0
+          },
+          "economy": {
+            "precision": 0.6229508196721312,
+            "recall": 0.9743589743589743,
+            "f1-score": 0.76,
+            "support": 39.0
+          },
+          "international": {
+            "precision": 0.9230769230769231,
+            "recall": 0.631578947368421,
+            "f1-score": 0.75,
+            "support": 19.0
+          },
+          "science": {
+            "precision": 1.0,
+            "recall": 0.09090909090909091,
+            "f1-score": 0.16666666666666666,
+            "support": 11.0
+          },
+          "sports": {
+            "precision": 0.7777777777777778,
+            "recall": 0.6363636363636364,
+            "f1-score": 0.7,
+            "support": 11.0
+          },
+          "accuracy": 0.7216494845360825,
+          "macro avg": {
+            "precision": 0.849376488720751,
+            "recall": 0.6078186003882597,
+            "f1-score": 0.6353333333333333,
+            "support": 97.0
+          },
+          "weighted avg": {
+            "precision": 0.7946536778715247,
+            "recall": 0.7216494845360825,
+            "f1-score": 0.6909621993127149,
+            "support": 97.0
+          }
+        }
+      },
+      {
+        "method": "word2vec_mean",
+        "validation_accuracy": 0.7216494845360825,
+        "validation_macro_f1": 0.6323412451661425,
+        "test_accuracy": 0.7216494845360825,
+        "test_macro_f1": 0.6168325791855205,
+        "test_report": {
+          "culture": {
+            "precision": 0.6956521739130435,
+            "recall": 0.9411764705882353,
+            "f1-score": 0.8,
+            "support": 17.0
+          },
+          "economy": {
+            "precision": 0.7058823529411765,
+            "recall": 0.9230769230769231,
+            "f1-score": 0.8,
+            "support": 39.0
+          },
+          "international": {
+            "precision": 0.8,
+            "recall": 0.631578947368421,
+            "f1-score": 0.7058823529411765,
+            "support": 19.0
+          },
+          "science": {
+            "precision": 1.0,
+            "recall": 0.18181818181818182,
+            "f1-score": 0.3076923076923077,
+            "support": 11.0
+          },
+          "sports": {
+            "precision": 0.6666666666666666,
+            "recall": 0.36363636363636365,
+            "f1-score": 0.47058823529411764,
+            "support": 11.0
+          },
+          "accuracy": 0.7216494845360825,
+          "macro avg": {
+            "precision": 0.7736402387041774,
+            "recall": 0.608257377297625,
+            "f1-score": 0.6168325791855205,
+            "support": 97.0
+          },
+          "weighted avg": {
+            "precision": 0.7514312582944428,
+            "recall": 0.7216494845360825,
+            "f1-score": 0.6883799039044642,
+            "support": 97.0
+          }
+        }
+      },
+      {
+        "method": "fasttext_mean",
+        "validation_accuracy": 0.711340206185567,
+        "validation_macro_f1": 0.6245500195643668,
+        "test_accuracy": 0.7422680412371134,
+        "test_macro_f1": 0.6425485625485624,
+        "test_report": {
+          "culture": {
+            "precision": 0.6956521739130435,
+            "recall": 0.9411764705882353,
+            "f1-score": 0.8,
+            "support": 17.0
+          },
+          "economy": {
+            "precision": 0.7254901960784313,
+            "recall": 0.9487179487179487,
+            "f1-score": 0.8222222222222222,
+            "support": 39.0
+          },
+          "international": {
+            "precision": 0.8571428571428571,
+            "recall": 0.631578947368421,
+            "f1-score": 0.7272727272727273,
+            "support": 19.0
+          },
+          "science": {
+            "precision": 1.0,
+            "recall": 0.18181818181818182,
+            "f1-score": 0.3076923076923077,
+            "support": 11.0
+          },
+          "sports": {
+            "precision": 0.7142857142857143,
+            "recall": 0.45454545454545453,
+            "f1-score": 0.5555555555555556,
+            "support": 11.0
+          },
+          "accuracy": 0.7422680412371134,
+          "macro avg": {
+            "precision": 0.7985141882840093,
+            "recall": 0.6315674006076482,
+            "f1-score": 0.6425485625485624,
+            "support": 97.0
+          },
+          "weighted avg": {
+            "precision": 0.7759078530560588,
+            "recall": 0.7422680412371134,
+            "f1-score": 0.7111399482533504,
+            "support": 97.0
+          }
+        }
+      },
+      {
+        "method": "gensim_lsi",
+        "validation_accuracy": 0.7216494845360825,
+        "validation_macro_f1": 0.6486305209766752,
+        "test_accuracy": 0.7319587628865979,
+        "test_macro_f1": 0.6612329788438164,
+        "test_report": {
+          "culture": {
+            "precision": 0.9333333333333333,
+            "recall": 0.8235294117647058,
+            "f1-score": 0.875,
+            "support": 17.0
+          },
+          "economy": {
+            "precision": 0.6440677966101694,
+            "recall": 0.9743589743589743,
+            "f1-score": 0.7755102040816326,
+            "support": 39.0
+          },
+          "international": {
+            "precision": 0.9,
+            "recall": 0.47368421052631576,
+            "f1-score": 0.6206896551724138,
+            "support": 19.0
+          },
+          "science": {
+            "precision": 1.0,
+            "recall": 0.18181818181818182,
+            "f1-score": 0.3076923076923077,
+            "support": 11.0
+          },
+          "sports": {
+            "precision": 0.7272727272727273,
+            "recall": 0.7272727272727273,
+            "f1-score": 0.7272727272727273,
+            "support": 11.0
+          },
+          "accuracy": 0.7319587628865979,
+          "macro avg": {
+            "precision": 0.840934771443246,
+            "recall": 0.636132701148181,
+            "f1-score": 0.6612329788438164,
+            "support": 97.0
+          },
+          "weighted avg": {
+            "precision": 0.7946939250975595,
+            "recall": 0.7319587628865979,
+            "f1-score": 0.7040991421863395,
+            "support": 97.0
+          }
+        }
+      }
+    ]
+  }
+}

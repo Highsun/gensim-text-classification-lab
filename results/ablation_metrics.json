@@ -1,0 +1,411 @@
+{
+  "protocol": "One factor at a time; same corpus and article splits; validation only; no test-set selection.",
+  "split_file": "outputs/default/splits.json",
+  "selected_articles": 485,
+  "class_counts": {
+    "culture": 86,
+    "economy": 195,
+    "international": 96,
+    "science": 54,
+    "sports": 54
+  },
+  "unsupervised_train_articles": 2522,
+  "runs": [
+    {
+      "name": "baseline",
+      "change_from_baseline": {},
+      "parameters": {
+        "vector_size": 64,
+        "window": 5,
+        "min_count": 2,
+        "epochs": 5,
+        "workers": 1,
+        "seed": 42,
+        "sg": 1,
+        "negative": 5,
+        "min_n": 2,
+        "max_n": 4,
+        "bucket": 100000
+      },
+      "train_seconds": 13.687,
+      "vocabulary_size": 27164,
+      "estimated_training_memory_bytes": 56564592,
+      "validation_oov_token_count": 1750,
+      "validation_oov_vector_coverage": 1.0,
+      "bucket_statistics": {
+        "distinct_ngrams": 122966,
+        "used_buckets": 70751,
+        "occupied_bucket_fraction": 0.70751,
+        "hash_collision_fraction": 0.4246295724021274
+      },
+      "validation": {
+        "3_classes": {
+          "n_train": 201,
+          "n_validation": 67,
+          "accuracy": 0.8208955223880597,
+          "macro_f1": 0.7271330153683095
+        },
+        "5_classes": {
+          "n_train": 291,
+          "n_validation": 97,
+          "accuracy": 0.711340206185567,
+          "macro_f1": 0.6245500195643668
+        }
+      }
+    },
+    {
+      "name": "no_subwords",
+      "change_from_baseline": {
+        "min_n": 1,
+        "max_n": 0
+      },
+      "parameters": {
+        "vector_size": 64,
+        "window": 5,
+        "min_count": 2,
+        "epochs": 5,
+        "workers": 1,
+        "seed": 42,
+        "sg": 1,
+        "negative": 5,
+        "min_n": 1,
+        "max_n": 0,
+        "bucket": 100000
+      },
+      "train_seconds": 10.109,
+      "vocabulary_size": 27164,
+      "estimated_training_memory_bytes": 27489968,
+      "validation_oov_token_count": 1750,
+      "validation_oov_vector_coverage": 0.0,
+      "bucket_statistics": {
+        "distinct_ngrams": 0,
+        "used_buckets": 0,
+        "occupied_bucket_fraction": 0.0,
+        "hash_collision_fraction": 0.0
+      },
+      "validation": {
+        "3_classes": {
+          "n_train": 201,
+          "n_validation": 67,
+          "accuracy": 0.8208955223880597,
+          "macro_f1": 0.7271330153683095
+        },
+        "5_classes": {
+          "n_train": 291,
+          "n_validation": 97,
+          "accuracy": 0.711340206185567,
+          "macro_f1": 0.6260656990068755
+        }
+      }
+    },
+    {
+      "name": "ngrams_3_6",
+      "change_from_baseline": {
+        "min_n": 3,
+        "max_n": 6
+      },
+      "parameters": {
+        "vector_size": 64,
+        "window": 5,
+        "min_count": 2,
+        "epochs": 5,
+        "workers": 1,
+        "seed": 42,
+        "sg": 1,
+        "negative": 5,
+        "min_n": 3,
+        "max_n": 6,
+        "bucket": 100000
+      },
+      "train_seconds": 12.372,
+      "vocabulary_size": 27164,
+      "estimated_training_memory_bytes": 56262148,
+      "validation_oov_token_count": 1750,
+      "validation_oov_vector_coverage": 1.0,
+      "bucket_statistics": {
+        "distinct_ngrams": 104231,
+        "used_buckets": 64866,
+        "occupied_bucket_fraction": 0.64866,
+        "hash_collision_fraction": 0.37767075054446375
+      },
+      "validation": {
+        "3_classes": {
+          "n_train": 201,
+          "n_validation": 67,
+          "accuracy": 0.8059701492537313,
+          "macro_f1": 0.7187996820349762
+        },
+        "5_classes": {
+          "n_train": 291,
+          "n_validation": 97,
+          "accuracy": 0.6907216494845361,
+          "macro_f1": 0.6141112891290521
+        }
+      }
+    },
+    {
+      "name": "bucket_10000",
+      "change_from_baseline": {
+        "bucket": 10000
+      },
+      "parameters": {
+        "vector_size": 64,
+        "window": 5,
+        "min_count": 2,
+        "epochs": 5,
+        "workers": 1,
+        "seed": 42,
+        "sg": 1,
+        "negative": 5,
+        "min_n": 2,
+        "max_n": 4,
+        "bucket": 10000
+      },
+      "train_seconds": 13.892,
+      "vocabulary_size": 27164,
+      "estimated_training_memory_bytes": 33524592,
+      "validation_oov_token_count": 1750,
+      "validation_oov_vector_coverage": 1.0,
+      "bucket_statistics": {
+        "distinct_ngrams": 122966,
+        "used_buckets": 10000,
+        "occupied_bucket_fraction": 1.0,
+        "hash_collision_fraction": 0.9186767073825285
+      },
+      "validation": {
+        "3_classes": {
+          "n_train": 201,
+          "n_validation": 67,
+          "accuracy": 0.8208955223880597,
+          "macro_f1": 0.7271330153683095
+        },
+        "5_classes": {
+          "n_train": 291,
+          "n_validation": 97,
+          "accuracy": 0.7216494845360825,
+          "macro_f1": 0.6514210178453405
+        }
+      }
+    },
+    {
+      "name": "dimension_128",
+      "change_from_baseline": {
+        "vector_size": 128
+      },
+      "parameters": {
+        "vector_size": 128,
+        "window": 5,
+        "min_count": 2,
+        "epochs": 5,
+        "workers": 1,
+        "seed": 42,
+        "sg": 1,
+        "negative": 5,
+        "min_n": 2,
+        "max_n": 4,
+        "bucket": 100000
+      },
+      "train_seconds": 20.537,
+      "vocabulary_size": 27164,
+      "estimated_training_memory_bytes": 96072560,
+      "validation_oov_token_count": 1750,
+      "validation_oov_vector_coverage": 1.0,
+      "bucket_statistics": {
+        "distinct_ngrams": 122966,
+        "used_buckets": 70751,
+        "occupied_bucket_fraction": 0.70751,
+        "hash_collision_fraction": 0.4246295724021274
+      },
+      "validation": {
+        "3_classes": {
+          "n_train": 201,
+          "n_validation": 67,
+          "accuracy": 0.8208955223880597,
+          "macro_f1": 0.7271330153683095
+        },
+        "5_classes": {
+          "n_train": 291,
+          "n_validation": 97,
+          "accuracy": 0.711340206185567,
+          "macro_f1": 0.6245500195643668
+        }
+      }
+    },
+    {
+      "name": "window_2",
+      "change_from_baseline": {
+        "window": 2
+      },
+      "parameters": {
+        "vector_size": 64,
+        "window": 2,
+        "min_count": 2,
+        "epochs": 5,
+        "workers": 1,
+        "seed": 42,
+        "sg": 1,
+        "negative": 5,
+        "min_n": 2,
+        "max_n": 4,
+        "bucket": 100000
+      },
+      "train_seconds": 8.091,
+      "vocabulary_size": 27164,
+      "estimated_training_memory_bytes": 56564592,
+      "validation_oov_token_count": 1750,
+      "validation_oov_vector_coverage": 1.0,
+      "bucket_statistics": {
+        "distinct_ngrams": 122966,
+        "used_buckets": 70751,
+        "occupied_bucket_fraction": 0.70751,
+        "hash_collision_fraction": 0.4246295724021274
+      },
+      "validation": {
+        "3_classes": {
+          "n_train": 201,
+          "n_validation": 67,
+          "accuracy": 0.8208955223880597,
+          "macro_f1": 0.7044166117336849
+        },
+        "5_classes": {
+          "n_train": 291,
+          "n_validation": 97,
+          "accuracy": 0.6907216494845361,
+          "macro_f1": 0.5751373626373626
+        }
+      }
+    },
+    {
+      "name": "epochs_10",
+      "change_from_baseline": {
+        "epochs": 10
+      },
+      "parameters": {
+        "vector_size": 64,
+        "window": 5,
+        "min_count": 2,
+        "epochs": 10,
+        "workers": 1,
+        "seed": 42,
+        "sg": 1,
+        "negative": 5,
+        "min_n": 2,
+        "max_n": 4,
+        "bucket": 100000
+      },
+      "train_seconds": 28.846,
+      "vocabulary_size": 27164,
+      "estimated_training_memory_bytes": 56564592,
+      "validation_oov_token_count": 1750,
+      "validation_oov_vector_coverage": 1.0,
+      "bucket_statistics": {
+        "distinct_ngrams": 122966,
+        "used_buckets": 70751,
+        "occupied_bucket_fraction": 0.70751,
+        "hash_collision_fraction": 0.4246295724021274
+      },
+      "validation": {
+        "3_classes": {
+          "n_train": 201,
+          "n_validation": 67,
+          "accuracy": 0.835820895522388,
+          "macro_f1": 0.783662743356281
+        },
+        "5_classes": {
+          "n_train": 291,
+          "n_validation": 97,
+          "accuracy": 0.7731958762886598,
+          "macro_f1": 0.7371818581710782
+        }
+      }
+    },
+    {
+      "name": "min_count_5",
+      "change_from_baseline": {
+        "min_count": 5
+      },
+      "parameters": {
+        "vector_size": 64,
+        "window": 5,
+        "min_count": 5,
+        "epochs": 5,
+        "workers": 1,
+        "seed": 42,
+        "sg": 1,
+        "negative": 5,
+        "min_n": 2,
+        "max_n": 4,
+        "bucket": 100000
+      },
+      "train_seconds": 12.737,
+      "vocabulary_size": 13680,
+      "estimated_training_memory_bytes": 41165876,
+      "validation_oov_token_count": 2706,
+      "validation_oov_vector_coverage": 1.0,
+      "bucket_statistics": {
+        "distinct_ngrams": 59752,
+        "used_buckets": 44957,
+        "occupied_bucket_fraction": 0.44957,
+        "hash_collision_fraction": 0.24760677466863035
+      },
+      "validation": {
+        "3_classes": {
+          "n_train": 201,
+          "n_validation": 67,
+          "accuracy": 0.8208955223880597,
+          "macro_f1": 0.7271330153683095
+        },
+        "5_classes": {
+          "n_train": 291,
+          "n_validation": 97,
+          "accuracy": 0.711340206185567,
+          "macro_f1": 0.6277624812599745
+        }
+      }
+    },
+    {
+      "name": "cbow",
+      "change_from_baseline": {
+        "sg": 0
+      },
+      "parameters": {
+        "vector_size": 64,
+        "window": 5,
+        "min_count": 2,
+        "epochs": 5,
+        "workers": 1,
+        "seed": 42,
+        "sg": 0,
+        "negative": 5,
+        "min_n": 2,
+        "max_n": 4,
+        "bucket": 100000
+      },
+      "train_seconds": 7.017,
+      "vocabulary_size": 27164,
+      "estimated_training_memory_bytes": 56564592,
+      "validation_oov_token_count": 1750,
+      "validation_oov_vector_coverage": 1.0,
+      "bucket_statistics": {
+        "distinct_ngrams": 122966,
+        "used_buckets": 70751,
+        "occupied_bucket_fraction": 0.70751,
+        "hash_collision_fraction": 0.4246295724021274
+      },
+      "validation": {
+        "3_classes": {
+          "n_train": 201,
+          "n_validation": 67,
+          "accuracy": 0.8059701492537313,
+          "macro_f1": 0.6897435897435898
+        },
+        "5_classes": {
+          "n_train": 291,
+          "n_validation": 97,
+          "accuracy": 0.7216494845360825,
+          "macro_f1": 0.6463733556896164
+        }
+      }
+    }
+  ]
+}
